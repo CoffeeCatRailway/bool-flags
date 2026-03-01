@@ -12,7 +12,7 @@ Check `Cargo Features` below for `FlagsUSize`.
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-bool-flags = "0.1.0"
+bool-flags = "0.1.1"
 ```
 
 ## Example
