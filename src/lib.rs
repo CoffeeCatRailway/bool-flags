@@ -5,7 +5,7 @@ macro_rules! create_flags {
 	($name:ident, $vtype:tt, $n:expr) => {
 		paste! {
 			#[doc = concat!("Condenses ", stringify!($n), " booleans into a single ", stringify!($vtype), ".")]
-			#[derive(Debug, Copy, Clone)]
+			#[derive(Copy, Clone, Eq, PartialEq, Debug, Default)]
 			pub struct $name($vtype);
 			
 			impl $name {
