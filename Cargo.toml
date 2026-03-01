@@ -2,10 +2,13 @@
 name = "bool-flags"
 version = "0.1.0"
 edition = "2024"
+authors = ["CoffeeCatRailway"]
+license = "MIT"
+keywords = ["bit", "bool-flags", "flags", "bool"]
 readme = "README.md"
-#license = "MIT"
-license-file = "LICENSE"
-publish = false
+repository = "https://github.com/CoffeeCatRailway/bool-flags"
+homepage = "https://github.com/CoffeeCatRailway/bool-flags"
+description = "Condense multiple booleans into fewer bytes."
 
 [dependencies]
 minipaste = "0.1.0"
