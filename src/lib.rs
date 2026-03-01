@@ -30,29 +30,25 @@ macro_rules! create_flags {
 				#[doc = "Get the n'th bit (flag)"]
 				#[cfg_attr(feature = "inline", inline)]
 				pub fn get(&self, index: $vtype) -> bool {
-					let index = index % $n;
-					self.0 & (1 << index) != 0
+					self.0 & (1 << (index % $n)) != 0
 				}
 				
 				#[doc = "Flip the n'th bit (flag)"]
 				#[cfg_attr(feature = "inline", inline)]
-				pub fn flip(&mut self, index: usize) {
-					let index = index % $n;
-					self.0 ^= 1 << index;
+				pub fn flip(&mut self, index: $vtype) {
+					self.0 ^= 1 << (index % $n);
 				}
 				
 				#[doc = "Reset the n'th bit (flag) to 0 (false)"]
 				#[cfg_attr(feature = "inline", inline)]
-				pub fn clear(&mut self, index: usize) {
-					let index = index % $n;
-					self.0 &= !(1 << index);
+				pub fn clear(&mut self, index: $vtype) {
+					self.0 &= !(1 << (index % $n));
 				}
 				
 				#[doc = "Set the n'th bit (flag) to 1 (true)"]
 				#[cfg_attr(feature = "inline", inline)]
-				pub fn set(&mut self, index: usize) {
-					let index = index % $n;
-					self.0 |= 1 << index;
+				pub fn set(&mut self, index: $vtype) {
+					self.0 |= 1 << (index % $n);
 				}
 			}
 			
