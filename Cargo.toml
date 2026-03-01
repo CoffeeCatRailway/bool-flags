@@ -1,0 +1,16 @@
+[package]
+name = "bool-flags"
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+#license = "MIT"
+license-file = "LICENSE"
+publish = false
+
+[dependencies]
+minipaste = "0.1.0"
+
+[features]
+default = []
+inline = []
+usize = []
