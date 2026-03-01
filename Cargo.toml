@@ -8,6 +8,7 @@ keywords = ["bit", "bool-flags", "flags", "bool"]
 readme = "README.md"
 repository = "https://github.com/CoffeeCatRailway/bool-flags"
 homepage = "https://github.com/CoffeeCatRailway/bool-flags"
+categories = ["no-std"]
 description = "Condense multiple booleans into fewer bytes."
 
 [dependencies]
