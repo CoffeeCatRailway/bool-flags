@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [//]: # ()
 [//]: # (- )
 
+## [0.1.2] - 01-03-2026
+
+### Added
+
+- `shift left` and `shift right` operators
+- Feature: `operators`
+
 ## [0.1.1] - 01-03-2026
 
 ### Added

@@ -1,5 +1,6 @@
-use std::fmt;
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
+use std::fmt::{Display, Formatter, Result};
+#[cfg(feature = "operators")]
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Shl, ShlAssign, Shr, ShrAssign};
 use minipaste::paste;
 
 macro_rules! create_flags {
@@ -53,12 +54,13 @@ macro_rules! create_flags {
 				}
 			}
 			
-			impl fmt::Display for $name {
-				fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+			impl Display for $name {
+				fn fmt(&self, f: &mut Formatter) -> Result {
 					write!(f, "0b{:0width$b}", self.0, width = size_of::<$vtype>() * 8)
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitAnd for $name {
 				type Output = $name;
 				
@@ -67,6 +69,7 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitAnd<$vtype> for $name {
 				type Output = $name;
 				
@@ -75,18 +78,21 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitAndAssign for $name {
 				fn bitand_assign(&mut self, rhs: Self) {
 					self.0 &= rhs.0;
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitAndAssign<$vtype> for $name {
 				fn bitand_assign(&mut self, rhs: $vtype) {
 					self.0 &= rhs;
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitOr for $name {
 				type Output = $name;
 				
@@ -95,6 +101,7 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitOr<$vtype> for $name {
 				type Output = $name;
 				
@@ -103,18 +110,21 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitOrAssign for $name {
 				fn bitor_assign(&mut self, rhs: Self) {
 					self.0 |= rhs.0;
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitOrAssign<$vtype> for $name {
 				fn bitor_assign(&mut self, rhs: $vtype) {
 					self.0 |= rhs;
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitXor for $name {
 				type Output = $name;
 				
@@ -123,6 +133,7 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitXor<$vtype> for $name {
 				type Output = $name;
 				
@@ -131,15 +142,49 @@ macro_rules! create_flags {
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitXorAssign for $name {
 				fn bitxor_assign(&mut self, rhs: Self) {
 					self.0 ^= rhs.0;
 				}
 			}
 			
+			#[cfg(feature = "operators")]
 			impl BitXorAssign<$vtype> for $name {
 				fn bitxor_assign(&mut self, rhs: $vtype) {
 					self.0 ^= rhs;
+				}
+			}
+			
+			#[cfg(feature = "operators")]
+			impl Shl<$vtype> for $name {
+				type Output = $name;
+				
+				fn shl(self, rhs: $vtype) -> Self::Output {
+					Self(self.0 << rhs)
+				}
+			}
+			
+			#[cfg(feature = "operators")]
+			impl Shr<$vtype> for $name {
+				type Output = $name;
+				
+				fn shr(self, rhs: $vtype) -> Self::Output {
+					Self(self.0 >> rhs)
+				}
+			}
+			
+			#[cfg(feature = "operators")]
+			impl ShlAssign<$vtype> for $name {
+				fn shl_assign(&mut self, rhs: $vtype) {
+					self.0 <<= rhs;
+				}
+			}
+			
+			#[cfg(feature = "operators")]
+			impl ShrAssign<$vtype> for $name {
+				fn shr_assign(&mut self, rhs: $vtype) {
+					self.0 >>= rhs;
 				}
 			}
 		}
@@ -226,13 +271,17 @@ mod tests {
 	}
 	
 	#[test]
+	#[cfg(feature = "operators")]
 	fn bit_ops() {
 		macro_rules! check_bit_ops {
 			($ftype:tt, $vtype:tt) => {
 				let all = $ftype::all();
 				paste! {
-					let one = $ftype::[<from_ $vtype>](1);
+					let one = $ftype::[<from_ $vtype>](1); // 0b..0001
 					let not_one = $ftype::[<from_ $vtype>](($vtype::MAX - 1));
+					
+					let two = $ftype::[<from_ $vtype>](2); // 0b..0010
+					let four = $ftype::[<from_ $vtype>](4); // 0b..0100
 				}
 				assert_eq!(all & one, one);
 				assert_eq!(all & one.0, one);
@@ -242,6 +291,9 @@ mod tests {
 				
 				assert_eq!(all ^ one, not_one);
 				assert_eq!(all ^ one.0, not_one);
+				
+				assert_eq!(two << 1, four);
+				assert_eq!(two >> 1, one);
 				
 				// And assign
 				let mut and_assign = $ftype::all();
@@ -269,6 +321,16 @@ mod tests {
 				let mut xor_assign = $ftype::all();
 				xor_assign ^= one.0;
 				assert_eq!(xor_assign, not_one);
+				
+				// Shl assign
+				let mut shl_assign = two;
+				shl_assign <<= 1;
+				assert_eq!(shl_assign, four);
+				
+				// Shr assign
+				let mut shr_assign = two;
+				shr_assign >>= 1;
+				assert_eq!(shr_assign, one);
 				
 				println!("{} bit ops passed", stringify!($ftype));
 			};
