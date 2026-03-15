@@ -41,3 +41,4 @@ fn main() {
 The `bool-flags` library defines two Cargo features:
 - `inline`: Makes `Flags` struct functions inline.
 - `usize`: Enables `FlagsUSize` type.
+- `operators` (default): Enables bitwise operators like OR, AND, XOR and Shift
